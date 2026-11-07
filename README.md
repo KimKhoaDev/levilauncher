@@ -1,0 +1,49 @@
+# LeviLauncher
+
+A desktop launcher for **Minecraft Bedrock Edition (GDK / UWP)** on **Windows**.
+
+LeviLauncher helps you install, manage, isolate, mod, and launch Release or Preview builds while keeping content and tooling easier to organize.
+
+## Documentation
+
+- **User docs:** https://liteldev.github.io/LeviLauncher/
+- **中文文档：** https://liteldev.github.io/LeviLauncher/zh-CN/
+
+## Downloads
+
+- **GitHub Releases:** https://github.com/LiteLDev/LeviLauncher/releases
+- **Lanzou Cloud:** https://levimc.lanzoue.com/b016ke39hc (Password: `levi`)
+
+## Requirements
+
+- Windows 10/11
+- A legitimate licensed copy of Minecraft Bedrock Edition
+- GDK: Microsoft Gaming Services and Microsoft GameInput available on the system
+- UWP: Windows Developer Mode and the UWP framework dependencies required by the package manifest
+
+UWP x64 instances support the console toggle under **Instance settings → Launch options** and compatible `preload-native` DLL mods imported through mod management. Installation deploys the loader; launching a registered instance prepares native loading while preserving Windows app activation and the app channel's shared `LocalState` content. The native loader also requires the desktop Visual C++ runtime, which the launcher checks and offers to install. Vanilla x86/ARM64 packages can still launch, but the bundled native loader currently supports x64 only. Automatic LeviLamina installation remains limited to supported GDK versions.
+
+## Community
+
+- **Discord:** https://discord.gg/v5R5P4vRZk
+- **QQ Group:** https://qm.qq.com/q/1z791rJgJG
+
+## Issue Reporting
+
+- **Issues:** https://github.com/LiteLDev/LeviLauncher/issues
+- Include your Windows version, LeviLauncher version, repro steps, and logs/screenshots when possible.
+
+## Development
+
+This repository's end-user guide now lives on GitHub Pages. For local docs work:
+
+```bash
+npm install
+npm run docs:dev
+```
+
+For app development, keep using the existing `frontend/`, `build/`, and Wails task flow.
+
+## License
+
+This project is licensed under GPL-3.0-only. The full license text is in `COPYING`, and the bundled third-party components are listed in `THIRD_PARTY_NOTICES`.
