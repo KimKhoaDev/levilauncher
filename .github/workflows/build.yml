@@ -1,7 +1,5 @@
 name: LeviLauncher build
 
-# CI for branches and pull requests. release.yml reuses this workflow for a v* tag, in which case the
-# version stamped into LeviLauncher.exe and the installers is taken from the tag.
 on:
   push:
     branches:
@@ -20,7 +18,10 @@ jobs:
       contents: read
 
     steps:
+      # Sửa lỗi: Thêm submodules giống job build để đảm bảo kéo đủ file frontend về kiểm tra
       - uses: actions/checkout@v7
+        with:
+          submodules: recursive
 
       - name: Set up xmake
         uses: xmake-io/github-action-setup-xmake@v1
@@ -59,7 +60,7 @@ jobs:
       - name: Generate Wails bindings
         shell: pwsh
         run: |
-          go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-alpha.77
+          go install ://github.com
           wails3 generate bindings -clean=true
 
       - name: Build frontend and enforce bundle budget
@@ -122,7 +123,7 @@ jobs:
       - name: Build LeviLauncher.exe
         shell: pwsh
         run: |
-          go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-alpha.77
+          go install ://github.com
           wails3 task windows:build PRODUCTION=true
 
       - name: Build installers
@@ -134,7 +135,6 @@ jobs:
             -BinDir bin `
             -OutDir dist
 
-      # test.ps1 upgrades 0.0.1 to 0.0.2, so it needs both versions of the installers.
       - name: Build installers for the installer tests
         shell: pwsh
         run: |
@@ -166,7 +166,6 @@ jobs:
           archive: false
           if-no-files-found: error
 
-  # Installs, upgrades and uninstalls the installers for real, on a disposable elevated runner.
   installer-test:
     name: Installer tests
     needs: build
@@ -179,13 +178,11 @@ jobs:
           name: installer-test
           path: installer-test
 
-      # The last release built with Inno Setup, to test the upgrade from it.
       - name: Download the Inno Setup installer of v1.0.7
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release download v1.0.7 --repo "${{ github.repository }}" --pattern LeviLauncher-amd64-installer.exe --dir inno
 
-      # Windows PowerShell 5.1, the oldest shell test.ps1 supports.
       - name: Run installer tests
         shell: powershell
         run: ./packaging/wix/test.ps1 -ArtifactsDir installer-test -Arch x64 -InnoSetup inno/LeviLauncher-amd64-installer.exe
